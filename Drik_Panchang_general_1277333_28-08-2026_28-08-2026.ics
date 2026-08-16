@@ -1,8 +1,28 @@
 BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//DrikPanchang Calendar Generator//EN
-CALSCALE:GREGORIAN
-METHOD:PUBLISH
-X-WR-CALNAME:Drik Panchang - General - Bengaluru\, Karnataka\, India
+PRODID:-//Drik Panchang Google Calendar Exporter//drikpanchang.com//EN
+X-WR-CALNAME:Drik Panchang (Bengaluru)
 X-WR-TIMEZONE:Asia/Kolkata
+BEGIN:VEVENT
+SUMMARY:🚩 Jayaparvati Vrat Ends\,Gajanana Sankashti\, Kamika Ekadashi\,
+  Soma Pradosh Vrat\, Darsha Amavasya\,Anvadhan\, Surya Grahan *Purna\,Isht
+ i\,Shravana Amavasya\, Chandra Darshana\, Hariyali Teej\, Nag Panchami\,Si
+ mha Sankranti\, Kalki Jayanti\, Varalakshmi Vrat\, Shravana Putrada Ekadas
+ hi\, Bhauma Pradosh Vrat\, Raksha Bandhan\,Rakhi\,Gayatri Jayanti\,Chandra
+  Grahan *Anshika\,Shravana Purnima\,Anvadhan\, Ishti\, Kajari Teej\, Bahul
+ a Chaturthi\,Heramba Sankashti - Daily Panchang
+DTSTART;VALUE=DATE:20260828
+DTEND;VALUE=DATE:20260829
+DTSTAMP:20260816T111015Z
+UID:panchang-20260828@bengaluru
+DESCRIPTION:🎉 Festivals/Vrat: Jayaparvati Vrat Ends\,Gajanana Sankashti
+ \, Kamika Ekadashi\, Soma Pradosh Vrat\, Darsha Amavasya\,Anvadhan\, Surya
+  Grahan *Purna\,Ishti\,Shravana Amavasya\, Chandra Darshana\, Hariyali Tee
+ j\, Nag Panchami\,Simha Sankranti\, Kalki Jayanti\, Varalakshmi Vrat\, Shr
+ avana Putrada Ekadashi\, Bhauma Pradosh Vrat\, Raksha Bandhan\,Rakhi\,Gaya
+ tri Jayanti\,Chandra Grahan *Anshika\,Shravana Purnima\,Anvadhan\, Ishti\,
+  Kajari Teej\, Bahula Chaturthi\,Heramba Sankashti\n----------------------
+ ---\n📅 Date: Friday\, 28 August 2026\n📍 Location: Bengaluru\n-------
+ ------------------\n-------------------------\nSource: DrikPanchang.com
+END:VEVENT
 END:VCALENDAR
