@@ -1,260 +1,96 @@
-# @title Drik Panchang to Google Calendar (.ics) Generator (Dual ICS Output)
-# @markdown Configure parameters below and click **Run**.
-
-# 1. Install dependencies
-!pip install -q requests beautifulsoup4 icalendar python-dateutil pytz
-
-import datetime
-from dateutil.rrule import DAILY, rrule
-import re
-import time
-import urllib.parse
-from bs4 import BeautifulSoup
-from google.colab import files
-from icalendar import Calendar, Event
-import pytz
-import requests
-
-# --- FORM PARAMETERS ---
-FROM_DATE = "2026-08-01"  # @param {type:"date"}
-TO_DATE = "2026-08-31"  # @param {type:"date"}
-GEONAME_ID = "1277333"  # @param {type:"string"} # Bengaluru: 1277333, Mumbai: 1275339, Delhi: 1273294, Chennai: 1264527, Hyderabad: 1269843
-LOCATION_NAME = "Bengaluru"  # @param {type:"string"}
-HOUR_FORMAT = "12-hour"  # @param ["12-hour", "24-hour"]
-TIMEZONE_STR = "Asia/Kolkata"  # @param {type:"string"}
-
-# Define the sources
-SOURCES = [
-    {
-        "id": "english",
-        "name": f"Drik Panchang English ({LOCATION_NAME})",
-        "url": "https://www.drikpanchang.com/panchang/day-panchang.html",
-        "filename": (
-            f"drik_panchang_english_{LOCATION_NAME}_{FROM_DATE}_{TO_DATE}.ics"
-        ),
-    },
-    {
-        "id": "kannada",
-        "name": f"Drik Panchanga Kannada ({LOCATION_NAME})",
-        "url": (
-            "https://www.drikpanchang.com/kannada/panchangam/kannada-day-panchangam.html"
-        ),
-        "filename": (
-            f"drik_panchang_kannada_{LOCATION_NAME}_{FROM_DATE}_{TO_DATE}.ics"
-        ),
-    },
-]
-
-
-def clean_text(text):
-  if not text:
-    return ""
-  # Remove tooltips/info icons (ⓘ, (i), etc.) and clean spaces
-  text = re.sub(r"[ⓘℹ️]|(?:\(i\))", "", text)
-  text = re.sub(r"\s+", " ", text).replace("\xa0", " ").strip(" :")
-  return text
-
-
-def format_time_values(text, target_format):
-  if not text:
-    return ""
-
-  def repl(match):
-    h, m, meridiem = (
-        int(match.group(1)),
-        match.group(2),
-        match.group(3).upper() if match.group(3) else "",
-    )
-    if meridiem == "PM" and h < 12:
-      h_24 = h + 12
-    elif meridiem == "AM" and h == 12:
-      h_24 = 0
-    else:
-      h_24 = h
-
-    if target_format == "24-hour":
-      return f"{h_24:02d}:{m}"
-    else:
-      mer = "AM" if h_24 < 12 else "PM"
-      h_12 = h_24 % 12
-      h_12 = 12 if hour_12 == 0 else hour_12
-      return f"{h_12:02d}:{m} {mer}"
-
-  pattern = r"(\d{1,2}):(\d{2})(?:\s*(AM|PM|am|pm))?"
-  return re.sub(pattern, repl, text)
-
-
-def fetch_day_panchang(date_obj, base_url, geoname_id, hour_format):
-  headers = {
-      "User-Agent": (
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,"
-          " like Gecko) Chrome/124.0.0.0 Safari/537.36"
-      ),
-      "Accept-Language": "en-US,en;q=0.9,kn;q=0.8",
-  }
-
-  dp_time_param = "12hour" if hour_format == "12-hour" else "24hour"
-  params = {
-      "date": date_obj.strftime("%d/%m/%Y"),
-      "geoname-id": geoname_id,
-      "time-format": dp_time_param,
-  }
-
-  try:
-    resp = requests.get(base_url, params=params, headers=headers, timeout=12)
-    if resp.status_code != 200:
-      return None
-  except Exception:
-    return None
-
-  soup = BeautifulSoup(resp.content, "html.parser")
-
-  # Remove unwanted info/tooltip tags
-  for tag in soup.find_all(
-      ["span", "div", "a"],
-      class_=re.compile(r"dpInfo|tooltip|info-icon|badge", re.I),
-  ):
-    tag.decompose()
-
-  # 1. Day-Specific Festivals & Vrats
-  festivals = []
-  fest_section = soup.select(
-      ".dpFestivalCard, .dpFestivalList, .dpDayFestival, div[class*='Festival']"
-  )
-  for sec in fest_section:
-    for item in sec.find_all(
-        ["div", "span", "a", "li"], class_=re.compile(r"dpEvent|dpFestival|dpName")
-    ):
-      txt = clean_text(item.get_text())
-      if (
-          txt
-          and txt not in festivals
-          and "Festivals" not in txt
-          and len(txt) > 2
-      ):
-        festivals.append(txt)
-
-  if not festivals:
-    for node in soup.find_all("div", class_="dpEventName"):
-      txt = clean_text(node.get_text())
-      if txt and txt not in festivals:
-        festivals.append(txt)
-
-  # 2. Daily Panchang Attributes
-  panchang_items = []
-  seen_keys = set()
-
-  rows = soup.find_all(
-      ["tr", "div"], class_=re.compile(r"dpTableRow|dpTableContent|dpCard")
-  )
-  if not rows:
-    rows = soup.find_all("tr")
-
-  for r in rows:
-    cells = r.find_all(["td", "div"], recursive=False)
-    if len(cells) >= 2:
-      k = clean_text(cells[0].get_text())
-      v = clean_text(cells[1].get_text())
-      if k and v and k not in seen_keys and ":" not in k and len(k) < 35:
-        v_formatted = format_time_values(v, hour_format)
-        panchang_items.append((k, v_formatted))
-        seen_keys.add(k)
-    else:
-      txt = clean_text(r.get_text())
-      if ":" in txt:
-        parts = txt.split(":", 1)
-        k = clean_text(parts[0])
-        v = clean_text(parts[1])
-        if k and v and k not in seen_keys and len(k) < 35:
-          v_formatted = format_time_values(v, hour_format)
-          panchang_items.append((k, v_formatted))
-          seen_keys.add(k)
-
-  return {
-      "date": date_obj,
-      "festivals": festivals,
-      "panchang_items": panchang_items,
-  }
-
-
-# --- EXECUTION ---
-start_dt = datetime.datetime.strptime(FROM_DATE, "%Y-%m-%d").date()
-end_dt = datetime.datetime.strptime(TO_DATE, "%Y-%m-%d").date()
-tz = pytz.timezone(TIMEZONE_STR)
-
-for source in SOURCES:
-  print(f"\n--- Generating: {source['name']} ---")
-  cal = Calendar()
-  cal.add("prodid", f"-//Drik Panchang//{source['id'].upper()}//EN")
-  cal.add("version", "2.0")
-  cal.add("X-WR-CALNAME", source["name"])
-  cal.add("X-WR-TIMEZONE", TIMEZONE_STR)
-
-  for dt in rrule(DAILY, dtstart=start_dt, until=end_dt):
-    current_date = dt.date()
-    data = fetch_day_panchang(
-        current_date, source["url"], GEONAME_ID, HOUR_FORMAT
-    )
-
-    if not data or not data["panchang_items"]:
-      time.sleep(0.3)
-      continue
-
-    # Determine Title
-    tithi_val = ""
-    for k, v in data["panchang_items"]:
-      if "tithi" in k.lower() or "ತಿಥಿ" in k:
-        tithi_val = v.split("upto")[0].strip() if "upto" in v else v
-        break
-
-    if data["festivals"]:
-      extra = (
-          f" (+{len(data['festivals'])-1} more)"
-          if len(data["festivals"]) > 1
-          else ""
-      )
-      summary = (
-          f"{data['festivals'][0]}{extra} - {tithi_val}"
-          if tithi_val
-          else f"{data['festivals'][0]}{extra}"
-      )
-    else:
-      summary = f"Panchang: {tithi_val}" if tithi_val else "Daily Panchang"
-
-    # Description (strictly vertical line-by-line without emojis)
-    desc_lines = []
-    if data["festivals"]:
-      desc_lines.append("Festivals and Vrat:")
-      for f in data["festivals"]:
-        desc_lines.append(f"- {f}")
-      desc_lines.append("")
-
-    desc_lines.append("Daily Panchang:")
-    for k, v in data["panchang_items"]:
-      desc_lines.append(f"{k}: {v}")
-
-    desc_lines.append("")
-    desc_lines.append(f"Location: {LOCATION_NAME}")
-    desc_lines.append(f"Date: {current_date.strftime('%A, %d %B %Y')}")
-    desc_lines.append("Source: DrikPanchang.com")
-
-    event = Event()
-    event.add("summary", summary)
-    event.add("description", "\n".join(desc_lines))
-    event.add("dtstart", current_date)
-    event.add("dtend", current_date + datetime.timedelta(days=1))
-    event.add("dtstamp", datetime.datetime.now(tz))
-    event.add(
-        "uid",
-        f"{source['id']}-{current_date.strftime('%Y%m%d')}@{GEONAME_ID}.drikpanchang",
-    )
-    cal.add_component(event)
-
-    time.sleep(0.3)
-
-  # Write and download ICS
-  with open(source["filename"], "wb") as f:
-    f.write(cal.to_ical())
-
-  print(f"Downloading {source['filename']}...")
-  files.download(source["filename"])
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Drik Panchang//KANNADA//EN
+X-WR-CALNAME:Drik Panchanga Kannada (Bengaluru)
+X-WR-TIMEZONE:Asia/Kolkata
+BEGIN:VEVENT
+SUMMARY:2nd Chaturmasa Day 3🐄yogurt prohibition fast (+4 more) - Chatur
+ dashi
+DTSTART;VALUE=DATE:20260827
+DTEND;VALUE=DATE:20260828
+DTSTAMP:20260816T122509Z
+UID:kannada-20260827@1277333.drikpanchang
+DESCRIPTION:Festivals and Vrat:\n- 2nd Chaturmasa Day 3🐄yogurt prohibit
+ ion fast\n- Yajurveda Upakarma\n- Hayagriva Jayanti\n- Shravana Purnima Vr
+ at\n- Anvadhan\n\nDaily Panchang:\nSunrise: 06:08 AM\nMoonrise: 06:08 PM\n
+ Tithi: Chaturdashi upto 09:08 AM\nYoga: Shobhana upto 07:56 AM\nWeekday: G
+ uruwara\nPaksha: Shukla Paksha\nVikram Samvat: 2083 Siddharthi\nShaka Samv
+ at: 1948 Parabhava\nGujarati Samvat: 2082 Pingala\nPravishte/Gate: 11\nRaj
+ a: Guru👑 - King\nMantri: Mangal⚜ - Minister of Cabinet\nSasyadhipati:
+  Guru🌾 - Kharif Crops\nDhanadhipati: Guru💰 - Wealth and Economy\nRas
+ adhipati: Shani🍯 - Sap and Liquids\nMoonsign: Makara upto 01:35 PM\nSun
+ sign: Simha\nSurya Nakshatra: Makha\nSurya Pada: Makha upto 05:14 PM\nDrik
+  Ritu: Sharad (Autumn)\nVedic Ritu: Varsha (Monsoon)\nDrik Ayana: Dakshina
+ yana\nVedic Ayana: Dakshinayana\nBrahma Muhurta: 04:36 AM to 05:22 AM\nAbh
+ ijit: 11:56 AM to 12:46 PM\nGodhuli Muhurta: 06:34 PM to 06:57 PM\nAmrit K
+ alam: 03:13 PM to 04:55 PM\nRahu Kalam: 01:54 PM to 03:27 PM\nAadal Yoga: 
+ 02:15 AM\, Aug 28 to 06:08 AM\, Aug 28\nGulikai Kalam: 09:15 AM to 10:48 A
+ M\nBaana: Mrityu from 05:14 PM to Full Night\nAnandadi Yoga: Shrivatsa upt
+ o 02:15 AM\, Aug 28\nJeevanama: Full Life𝟣\nHomahuti: Chandra☾\nAgniv
+ asa: Prithvi (Earth) upto 09:08 AM\nBhadravasa: Patala (Nadir) from 09:08 
+ AM to 01:35 PM\nShivavasa: in Bhojana upto 09:08 AM\nKaliyuga: 5127 Years\
+ nKali Ahargana: 1872814 Days\nJulian Date: August 14\, 2026 CE\nNational C
+ ivil Date: Bhadrapada 05\, 1948 Shaka\nNational Nirayana Date: Bhadrapada 
+ 12\, 1948 Shaka\n\nLocation: Bengaluru\nDate: Thursday\, 27 August 2026\nS
+ ource: DrikPanchang.com
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:2nd Chaturmasa Day 4🐄yogurt prohibition fast (+10 more) - Hunni
+ me
+DTSTART;VALUE=DATE:20260828
+DTEND;VALUE=DATE:20260829
+DTSTAMP:20260816T122510Z
+UID:kannada-20260828@1277333.drikpanchang
+DESCRIPTION:Festivals and Vrat:\n- 2nd Chaturmasa Day 4🐄yogurt prohibit
+ ion fast\n- Varalakshmi Vrat\n- Raksha Bandhan\n- Rakhi\n- Gayatri Jayanti
+ \n- Gayatri Japam\n- Narali Purnima\n- Sanskrit Diwas\n- Chandra Grahan *A
+ nshika\n- Shravana Purnima\n- Ishti\n\nDaily Panchang:\nSunrise: 06:08 AM\
+ nMoonrise: 06:47 PM\nTithi: Hunnime upto 09:48 AM\nYoga: Atiganda upto 07:
+ 28 AM\nWeekday: Shukrawara\nPaksha: Shukla Paksha\nVikram Samvat: 2083 Sid
+ dharthi\nShaka Samvat: 1948 Parabhava\nGujarati Samvat: 2082 Pingala\nPrav
+ ishte/Gate: 12\nRaja: Guru👑 - King\nMantri: Mangal⚜ - Minister of Cab
+ inet\nSasyadhipati: Guru🌾 - Kharif Crops\nDhanadhipati: Guru💰 - Weal
+ th and Economy\nRasadhipati: Shani🍯 - Sap and Liquids\nMoonsign: Kumbha
+ \nSunsign: Simha\nSurya Nakshatra: Makha\nSurya Pada: Makha\nDrik Ritu: Sh
+ arad (Autumn)\nVedic Ritu: Varsha (Monsoon)\nDrik Ayana: Dakshinayana\nVed
+ ic Ayana: Dakshinayana\nBrahma Muhurta: 04:36 AM to 05:22 AM\nAbhijit: 11:
+ 56 AM to 12:46 PM\nGodhuli Muhurta: 06:33 PM to 06:56 PM\nAmrit Kalam: 07:
+ 44 PM to 09:23 PM\nRahu Kalam: 10:48 AM to 12:21 PM\nAadal Yoga: 06:08 AM 
+ to 03:13 AM\, Aug 29\nGulikai Kalam: 07:41 AM to 09:15 AM\nVarjyam: 09:45 
+ AM to 11:24 AM\nBaana: Mrityu upto 06:06 PM\nAnandadi Yoga: Saumya upto 03
+ :13 AM\, Aug 29\nJeevanama: Full Life𝟣\nHomahuti: Chandra upto 03:13 AM
+ \, Aug 29☾\nAgnivasa: Patala (Nadir) upto 09:48 AM\nShivavasa: in Shmash
+ ana upto 09:48 AM\nKaliyuga: 5127 Years\nKali Ahargana: 1872815 Days\nJuli
+ an Date: August 15\, 2026 CE\nNational Civil Date: Bhadrapada 06\, 1948 Sh
+ aka\nNational Nirayana Date: Bhadrapada 13\, 1948 Shaka\n\nLocation: Benga
+ luru\nDate: Friday\, 28 August 2026\nSource: DrikPanchang.com
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:2nd Chaturmasa Day 5🐄yogurt prohibition fast - Padya
+DTSTART;VALUE=DATE:20260829
+DTEND;VALUE=DATE:20260830
+DTSTAMP:20260816T122512Z
+UID:kannada-20260829@1277333.drikpanchang
+DESCRIPTION:Festivals and Vrat:\n- 2nd Chaturmasa Day 5🐄yogurt prohibit
+ ion fast\n\nDaily Panchang:\nSunrise: 06:08 AM\nMoonrise: 07:24 PM\nTithi:
+  Padya upto 09:56 AM\nYoga: Sukarma upto 06:36 AM\nWeekday: Shaniwara\nPak
+ sha: Krishna Paksha\nVikram Samvat: 2083 Siddharthi\nShaka Samvat: 1948 Pa
+ rabhava\nGujarati Samvat: 2082 Pingala\nPravishte/Gate: 13\nRaja: Guru👑
+  - King\nMantri: Mangal⚜ - Minister of Cabinet\nSasyadhipati: Guru🌾 -
+  Kharif Crops\nDhanadhipati: Guru💰 - Wealth and Economy\nRasadhipati: S
+ hani🍯 - Sap and Liquids\nMoonsign: Kumbha upto 09:37 PM\nSunsign: Simha
+ \nSurya Nakshatra: Makha\nSurya Pada: Makha\nDrik Ritu: Sharad (Autumn)\nV
+ edic Ritu: Varsha (Monsoon)\nDrik Ayana: Dakshinayana\nVedic Ayana: Dakshi
+ nayana\nBrahma Muhurta: 04:36 AM to 05:22 AM\nAbhijit: 11:56 AM to 12:45 P
+ M\nGodhuli Muhurta: 06:33 PM to 06:56 PM\nAmrit Kalam: 07:32 PM to 09:10 P
+ M\nTri Pushkara Yoga: 09:56 AM to 03:42 AM\, Aug 30\nRahu Kalam: 09:14 AM 
+ to 10:47 AM\nGulikai Kalam: 06:08 AM to 07:41 AM\nVarjyam: 09:45 AM to 11:
+ 22 AM\nBaana: Agni upto 06:57 PM\nAnandadi Yoga: Kaladanda upto 03:42 AM\,
+  Aug 30\nJeevanama: Full Life𝟣\nHomahuti: Mangal♂\nAgnivasa: Prithvi 
+ (Earth) upto 09:56 AM\nShivavasa: with Gowri upto 09:56 AM\nKaliyuga: 5127
+  Years\nKali Ahargana: 1872816 Days\nJulian Date: August 16\, 2026 CE\nNat
+ ional Civil Date: Bhadrapada 07\, 1948 Shaka\nNational Nirayana Date: Bhad
+ rapada 14\, 1948 Shaka\n\nLocation: Bengaluru\nDate: Saturday\, 29 August 
+ 2026\nSource: DrikPanchang.com
+END:VEVENT
+END:VCALENDAR
