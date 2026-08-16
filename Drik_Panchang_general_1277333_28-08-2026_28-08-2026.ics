@@ -4,11 +4,11 @@ PRODID://DrikPanchang-PublicData//GoogleCalendar-ICS//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 X-WR-CALNAME:Drik Panchang - General - Bengaluru\, Karnataka\, India
-X-WR-CALDESC:Daily Panchang from Drik Panchang public page
+X-WR-CALDESC:Daily Panchang and Festival Calendar from Drik Panchang public data
 X-WR-TIMEZONE:Asia/Kolkata
 BEGIN:VEVENT
-UID:1e957c4a4684c5139fe5974e@drikpanchang-colab
-DTSTAMP:20260816T080254Z
+UID:panchang-29f22fe415f078769e9368b5@drikpanchang-colab
+DTSTAMP:20260816T092934Z
 DTSTART;VALUE=DATE:20260828
 DTEND;VALUE=DATE:20260829
 SUMMARY:Panchangam - Purnima - Calendars
@@ -24,8 +24,202 @@ DESCRIPTION:Drik Panchang\nLocation: Bengaluru\, Karnataka\, India\nTime
  ivals / Vrat:\n- 2nd Chaturmasa Day 4\n- 🐄\n- yogurt prohibition fast\n-
   Varalakshmi Vrat\n- Raksha Bandhan\n- Rakhi\n- Gayatri Jayanti\n- Gayat
  ri Japam\n- Narali Purnima\n- Sanskrit Diwas\n- Chandra Grahan *Anshika\
- n- Shravana Purnima\n- Ishti\n\nSource: Drik Panchang
+ n- Shravana Purnima\n- Ishti\n- August 2026\n- Shravana - Bhadrapada 208
+ 3\n- 📅\n\nSource: Drik Panchang
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:festival-4de7ae78b364bdcd887f10f6@drikpanchang-colab
+DTSTAMP:20260816T092934Z
+DTSTART;VALUE=DATE:20260828
+DTEND;VALUE=DATE:20260829
+SUMMARY:2nd Chaturmasa Day 4
+LOCATION:Bengaluru\, Karnataka\, India
+DESCRIPTION:2nd Chaturmasa Day 4\n\nDate: 28 August 2026\nLocation: Benga
+ luru\, Karnataka\, India\n\nSource: Drik Panchang
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:festival-4fa779fc3a05ba01deff60e3@drikpanchang-colab
+DTSTAMP:20260816T092934Z
+DTSTART;VALUE=DATE:20260828
+DTEND;VALUE=DATE:20260829
+SUMMARY:🐄
+LOCATION:Bengaluru\, Karnataka\, India
+DESCRIPTION:🐄\n\nDate: 28 August 2026\nLocation: Bengaluru\, Karnataka\, 
+ India\n\nSource: Drik Panchang
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:festival-924af1ae7fe4e0b45068f83e@drikpanchang-colab
+DTSTAMP:20260816T092934Z
+DTSTART;VALUE=DATE:20260828
+DTEND;VALUE=DATE:20260829
+SUMMARY:yogurt prohibition fast
+LOCATION:Bengaluru\, Karnataka\, India
+DESCRIPTION:yogurt prohibition fast\n\nDate: 28 August 2026\nLocation: Be
+ ngaluru\, Karnataka\, India\n\nSource: Drik Panchang
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:festival-5f444a1dfe34e1c4b778ef00@drikpanchang-colab
+DTSTAMP:20260816T092934Z
+DTSTART;VALUE=DATE:20260828
+DTEND;VALUE=DATE:20260829
+SUMMARY:Varalakshmi Vrat
+LOCATION:Bengaluru\, Karnataka\, India
+DESCRIPTION:Varalakshmi Vrat\n\nDate: 28 August 2026\nLocation: Bengaluru
+ \, Karnataka\, India\n\nSource: Drik Panchang
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:festival-d49a0b8ae913bbc5907d080c@drikpanchang-colab
+DTSTAMP:20260816T092934Z
+DTSTART;VALUE=DATE:20260828
+DTEND;VALUE=DATE:20260829
+SUMMARY:Raksha Bandhan
+LOCATION:Bengaluru\, Karnataka\, India
+DESCRIPTION:Raksha Bandhan\n\nDate: 28 August 2026\nLocation: Bengaluru\,
+  Karnataka\, India\n\nSource: Drik Panchang
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:festival-efc129c28082fc3cd9e5db9e@drikpanchang-colab
+DTSTAMP:20260816T092934Z
+DTSTART;VALUE=DATE:20260828
+DTEND;VALUE=DATE:20260829
+SUMMARY:Rakhi
+LOCATION:Bengaluru\, Karnataka\, India
+DESCRIPTION:Rakhi\n\nDate: 28 August 2026\nLocation: Bengaluru\, Karnatak
+ a\, India\n\nSource: Drik Panchang
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:festival-3367c9f97def738018481646@drikpanchang-colab
+DTSTAMP:20260816T092934Z
+DTSTART;VALUE=DATE:20260828
+DTEND;VALUE=DATE:20260829
+SUMMARY:Gayatri Jayanti
+LOCATION:Bengaluru\, Karnataka\, India
+DESCRIPTION:Gayatri Jayanti\n\nDate: 28 August 2026\nLocation: Bengaluru\
+ , Karnataka\, India\n\nSource: Drik Panchang
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:festival-466aaf7b878a36157a41cfb3@drikpanchang-colab
+DTSTAMP:20260816T092934Z
+DTSTART;VALUE=DATE:20260828
+DTEND;VALUE=DATE:20260829
+SUMMARY:Gayatri Japam
+LOCATION:Bengaluru\, Karnataka\, India
+DESCRIPTION:Gayatri Japam\n\nDate: 28 August 2026\nLocation: Bengaluru\, 
+ Karnataka\, India\n\nSource: Drik Panchang
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:festival-5754771dca36ba16ddac9e61@drikpanchang-colab
+DTSTAMP:20260816T092934Z
+DTSTART;VALUE=DATE:20260828
+DTEND;VALUE=DATE:20260829
+SUMMARY:Narali Purnima
+LOCATION:Bengaluru\, Karnataka\, India
+DESCRIPTION:Narali Purnima\n\nDate: 28 August 2026\nLocation: Bengaluru\,
+  Karnataka\, India\n\nSource: Drik Panchang
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:festival-390c6f7fa1f5c1c6ddf79bcc@drikpanchang-colab
+DTSTAMP:20260816T092934Z
+DTSTART;VALUE=DATE:20260828
+DTEND;VALUE=DATE:20260829
+SUMMARY:Sanskrit Diwas
+LOCATION:Bengaluru\, Karnataka\, India
+DESCRIPTION:Sanskrit Diwas\n\nDate: 28 August 2026\nLocation: Bengaluru\,
+  Karnataka\, India\n\nSource: Drik Panchang
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:festival-81d931b73e67fd3cc8fe95ab@drikpanchang-colab
+DTSTAMP:20260816T092934Z
+DTSTART;VALUE=DATE:20260828
+DTEND;VALUE=DATE:20260829
+SUMMARY:Chandra Grahan *Anshika
+LOCATION:Bengaluru\, Karnataka\, India
+DESCRIPTION:Chandra Grahan *Anshika\n\nDate: 28 August 2026\nLocation: Be
+ ngaluru\, Karnataka\, India\n\nSource: Drik Panchang
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:festival-45398f0b663f7e2113d170c0@drikpanchang-colab
+DTSTAMP:20260816T092934Z
+DTSTART;VALUE=DATE:20260828
+DTEND;VALUE=DATE:20260829
+SUMMARY:Shravana Purnima
+LOCATION:Bengaluru\, Karnataka\, India
+DESCRIPTION:Shravana Purnima\n\nDate: 28 August 2026\nLocation: Bengaluru
+ \, Karnataka\, India\n\nSource: Drik Panchang
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:festival-4a736853480c21a76fe6cdd0@drikpanchang-colab
+DTSTAMP:20260816T092934Z
+DTSTART;VALUE=DATE:20260828
+DTEND;VALUE=DATE:20260829
+SUMMARY:Ishti
+LOCATION:Bengaluru\, Karnataka\, India
+DESCRIPTION:Ishti\n\nDate: 28 August 2026\nLocation: Bengaluru\, Karnatak
+ a\, India\n\nSource: Drik Panchang
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:festival-7cf04d69cbcc4fa0c5679383@drikpanchang-colab
+DTSTAMP:20260816T092934Z
+DTSTART;VALUE=DATE:20260828
+DTEND;VALUE=DATE:20260829
+SUMMARY:August 2026
+LOCATION:Bengaluru\, Karnataka\, India
+DESCRIPTION:August 2026\n\nDate: 28 August 2026\nLocation: Bengaluru\, Ka
+ rnataka\, India\n\nSource: Drik Panchang
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:festival-335dff0264164f173f43d838@drikpanchang-colab
+DTSTAMP:20260816T092934Z
+DTSTART;VALUE=DATE:20260828
+DTEND;VALUE=DATE:20260829
+SUMMARY:Shravana - Bhadrapada 2083
+LOCATION:Bengaluru\, Karnataka\, India
+DESCRIPTION:Shravana - Bhadrapada 2083\n\nDate: 28 August 2026\nLocation:
+  Bengaluru\, Karnataka\, India\n\nSource: Drik Panchang
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:festival-4977526bd9a0132221da76db@drikpanchang-colab
+DTSTAMP:20260816T092934Z
+DTSTART;VALUE=DATE:20260828
+DTEND;VALUE=DATE:20260829
+SUMMARY:📅
+LOCATION:Bengaluru\, Karnataka\, India
+DESCRIPTION:📅\n\nDate: 28 August 2026\nLocation: Bengaluru\, Karnataka\, 
+ India\n\nSource: Drik Panchang
 STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 END:VCALENDAR
+
