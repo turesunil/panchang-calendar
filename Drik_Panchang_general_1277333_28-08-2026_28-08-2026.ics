@@ -1,31 +1,8 @@
 BEGIN:VCALENDAR
 VERSION:2.0
-PRODID://DrikPanchang-PublicData//GoogleCalendar-ICS//EN
+PRODID:-//DrikPanchang Calendar Generator//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 X-WR-CALNAME:Drik Panchang - General - Bengaluru\, Karnataka\, India
-X-WR-CALDESC:Daily Panchang from Drik Panchang public page
 X-WR-TIMEZONE:Asia/Kolkata
-BEGIN:VEVENT
-UID:1e957c4a4684c5139fe5974e@drikpanchang-colab
-DTSTAMP:20260816T095225Z
-DTSTART;VALUE=DATE:20260828
-DTEND;VALUE=DATE:20260829
-SUMMARY:Panchangam - Purnima - Calendars
-LOCATION:Bengaluru\, Karnataka\, India
-DESCRIPTION:Drik Panchang\nLocation: Bengaluru\, Karnataka\, India\nTime 
- Format: 24hour\n\nWeekday: Shukrawara\nTithi: Purnima\nNakshatra: Calend
- ars\nYoga: Atiganda\nKarana: Bava\nPaksha: Shukla Paksha\nSunrise: 06:08
- \nSunset: 18:33\nMoonrise: 18:47\nMoonset: No Moonset\nRahu Kalam: 10:48
- \nGulikai Kalam: 07:41\nYamaganda: 15:27\nAbhijit: 11:56\nDur Muhurtam: 
- 08:37\nAmrit Kalam: 19:44\nVarjyam: 09:45\nSun Sign: Shraddha Calculator
- \nMoon Sign: Birthstar\nAmanta Month: Shravana\nPurnimanta Month: Shrava
- na\nShaka Samvat: 1948 Parabhava\nVikram Samvat: 2083 Siddharthi\n\nFest
- ivals / Vrat:\n- 2nd Chaturmasa Day 4\n- 🐄\n- yogurt prohibition fast\n-
-  Varalakshmi Vrat\n- Raksha Bandhan\n- Rakhi\n- Gayatri Jayanti\n- Gayat
- ri Japam\n- Narali Purnima\n- Sanskrit Diwas\n- Chandra Grahan *Anshika\
- n- Shravana Purnima\n- Ishti\n\nSource: Drik Panchang
-STATUS:CONFIRMED
-TRANSP:TRANSPARENT
-END:VEVENT
 END:VCALENDAR
